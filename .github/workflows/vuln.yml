@@ -1,0 +1,14 @@
+name: Check PR
+on:
+  issue_comment:
+
+jobs:
+  check-pr:
+    name: check-pr
+    runs-on: self-hosted
+    steps:
+      - name: checkout code
+        run: |
+            branch="${{ github.event.pull_request.head.ref }}"
+            git checkout $branch
+            echo "Do something"
