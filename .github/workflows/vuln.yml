@@ -7,8 +7,21 @@ jobs:
     name: check-pr
     runs-on: self-hosted
     steps:
+      - name: Get PR ref
+        id: ref
+        uses: actions/github-script@v4
+        with:
+          result-encoding: string
+          script: |
+            const { owner, repo, number } = context.issue;
+            const pr = await github.pulls.get({
+              owner,
+              repo,
+              pull_number: number,
+            });
+            return pr.data.head.ref
       - name: checkout code
         run: |
-            branch="${{ github.event.pull_request.head.ref }}"
+            branch="${{ steps.ref.outputs.result }}"
             git checkout $branch
             echo "Do something"
